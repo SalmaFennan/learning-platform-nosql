@@ -1,65 +1,77 @@
-// Question : Pourquoi créer un module séparé pour les connexions aux bases de données ?
-// Réponse : Créer un module séparé pour les connexions aux bases de données améliore la maintenabilité et l'organisation du code. Cela permet :
-            //Réutilisabilité ,Séparation des responsabilités, Facilité de modification, Gestion des erreurs centralisée
-// Question : Comment gérer proprement la fermeture des connexions ?
-// Réponse : Pour éviter des fuites de ressources et garantir que les connexions sont fermées correctement lorsque l'application s'arrête, vous pouvez :
-            //Utiliser des gestionnaires d'événements : Par exemple, capturer les signaux système comme SIGINT (Ctrl + C) pour fermer les connexions avant que le processus ne se termine.
-            //Méthodes spécifiques : Utiliser les méthodes fournies par les clients des bases de données pour fermer les connexions (e.g., client.close() pour MongoDB).
-            //Encapsulation dans une fonction : Créer une fonction de nettoyage dédiée qui est appelée dans les gestionnaires d'événements ou avant la fin du script.
-
 const { MongoClient } = require('mongodb');
-const Redis = require("ioredis");
-const redis = new Redis();
+const redis = require('redis');
 const config = require('./env');
 
 let mongoClient, redisClient, db;
-const mongoose = require('mongoose');
+
+// Fonction pour se connecter à MongoDB
+// Fonction pour se connecter à MongoDB
 async function connectMongo() {
-  console.log('MongoDB URI:', process.env.MONGODB_URI); // Pour vérifier l'URL
   try {
-    await mongoose.connect(process.env.MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log('✅ Connected to MongoDB');
+    const mongoUri = process.env.MONGODB_URI;
+    const dbName = process.env.MONGODB_DB_NAME;
+
+    if (!mongoUri || !dbName) {
+      throw new Error('MONGODB_URI or MONGODB_DB_NAME is not defined in environment variables');
+    }
+
+    // Construire la chaîne complète de connexion MongoDB
+      // Connexion à MongoDB sans les options obsolètes
+      mongoClient = new MongoClient(mongoUri);
+      await mongoClient.connect();
+ db = mongoClient.db(dbName); // Sélection de la base de données
+    await mongoClient.connect();
+    db = mongoClient.db(dbName); // Sélection de la base de données
+    console.log(`Connexion à MongoDB réussie (Base de données : ${dbName})`);
   } catch (error) {
-    console.error('❌ MongoDB connection error:', error);
-    process.exit(1); // Quitte l'application en cas d'erreur critique
+    console.error('Erreur de connexion à MongoDB:', error.message);
+    // Implémentation de retries sur la connexion
+    setTimeout(connectMongo, 5000); // Nouvelle tentative après 5 secondes
   }
 }
 
+// Fonction pour se connecter à Redis
 async function connectRedis() {
   try {
-    const { createClient } = require('redis');
-    redisClient = createClient({ url: config.REDIS_URL });
-    redisClient.on('error', (err) => console.error('❌ Redis connection error:', err));
+    // Connexion à Redis avec gestion des erreurs et des retries
+    redisClient = redis.createClient({ url: config.REDIS_URI });
+    redisClient.on('connect', () => {
+      console.log('Connexion à Redis réussie');
+    });
+    redisClient.on('error', (err) => {
+      console.error('Erreur de connexion à Redis:', err);
+      // Tentatives de reconnexion en cas d'erreur
+      setTimeout(connectRedis, 5000); // Nouvelle tentative après 5 secondes
+    });
     await redisClient.connect();
-    console.log('✅ Connected to Redis');
   } catch (error) {
-    console.error('❌ Redis connection error:', error);
-    process.exit(1);
-  }
-}
-function closeConnections() {
-  if (mongoClient) {
-    mongoClient.close().then(() => console.log('🛑 MongoDB connection closed'));
-  }
-  if (redisClient) {
-    redisClient.quit().then(() => console.log('🛑 Redis connection closed'));
+    console.error('Erreur de connexion à Redis:', error);
+    // Tentatives de reconnexion en cas d'erreur
+    setTimeout(connectRedis, 5000); // Nouvelle tentative après 5 secondes
   }
 }
 
-// Capture les signaux système pour fermer proprement
-process.on('SIGINT', () => {
-  closeConnections();
-  process.exit(0);
-});
+// Fonction pour fermer proprement les connexions
+async function closeConnections() {
+  try {
+    if (mongoClient) {
+      await mongoClient.close();
+      console.log('Connexion MongoDB fermée');
+    }
+    if (redisClient) {
+      await redisClient.quit();
+      console.log('Connexion Redis fermée');
+    }
+  } catch (error) {
+    console.error('Erreur lors de la fermeture des connexions:', error);
+  }
+}
 
 // Export des fonctions et clients
 module.exports = {
   connectMongo,
   connectRedis,
   closeConnections,
-  getMongoDB: () => db, // Pour accéder à la base MongoDB
-  getRedisClient: () => redisClient // Pour accéder au client Redis
+  getDb: () => db,
+  getRedisClient: () => redisClient,
 };

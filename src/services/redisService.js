@@ -1,46 +1,97 @@
-// Question : Comment gérer efficacement le cache avec Redis ?
-// Réponse :
-// Question: Quelles sont les bonnes pratiques pour les clés Redis ?
-// Réponse :
+const redisConnection = require('../config/db'); // Importer la configuration pour Redis
 
-const redis = require('redis');
-const client = redis.createClient({ url: process.env.REDIS_URI });
+// Fonctions utilitaires pour Redis
 
-client.on('error', (err) => {
-  console.error('Redis Client Error:', err);
-});
-
-// Fonction générique de mise en cache des données
-async function cacheData(key, data, ttl = 3600) {  // TTL par défaut : 1 heure
+/**
+ * Mettre en cache des données avec une clé et un TTL.
+ * @param {string} key - La clé pour identifier les données dans Redis.
+ * @param {Object} data - Les données à mettre en cache.
+ * @param {number} ttl - Temps de vie des données en cache (en secondes).
+ * @returns {Promise<void>}
+ */
+async function cacheData(key, data, ttl) {
   try {
-    // Convertir l'objet 'data' en chaîne JSON
-    const jsonData = JSON.stringify(data);
-    
-    // Mettre les données en cache avec une expiration
-    await client.setEx(key, ttl, jsonData);
-    console.log(`Données mises en cache sous la clé: ${key}`);
+    await redisConnection.connectRedis(); // Assurer la connexion à Redis
+    const redisClient = redisConnection.getRedisClient(); // Obtenir le client Redis
+    const stringData = JSON.stringify(data);
+    await redisClient.set(key, stringData, { EX: ttl });
   } catch (error) {
-    console.error('Erreur lors de la mise en cache:', error);
+    console.error(`Erreur lors de la mise en cache avec la clé "${key}":`, error);
+    throw error;
   }
 }
 
-// Fonction pour récupérer les données mises en cache
-async function getCacheData(key) {
+/**
+ * Récupérer des données depuis le cache.
+ * @param {string} key - La clé pour identifier les données dans Redis.
+ * @returns {Promise<Object|null>} - Les données mises en cache ou null si non trouvées.
+ */
+async function getCachedData(key) {
   try {
-    const data = await client.get(key);
-    if (data) {
-      return JSON.parse(data); // Retourner les données sous forme d'objet
-    } else {
-      return null;  // Si la clé n'existe pas dans le cache
-    }
+    await redisConnection.connectRedis(); // Assurer la connexion à Redis
+    const redisClient = redisConnection.getRedisClient(); // Obtenir le client Redis
+    const stringData = await redisClient.get(key);
+    return stringData ? JSON.parse(stringData) : null;
   } catch (error) {
-    console.error('Erreur lors de la récupération du cache:', error);
-    return null;
+    console.error(`Erreur lors de la récupération de la clé "${key}":`, error);
+    throw error;
   }
 }
 
-// Export des fonctions de cache
+/**
+ * Supprimer une clé spécifique dans Redis.
+ * @param {string} key - La clé à supprimer.
+ * @returns {Promise<boolean>} - Indique si la suppression a réussi.
+ */
+async function deleteCache(key) {
+  try {
+    await redisConnection.connectRedis(); // Assurer la connexion à Redis
+    const redisClient = redisConnection.getRedisClient(); // Obtenir le client Redis
+    const result = await redisClient.del(key);
+    return result > 0;
+  } catch (error) {
+    console.error(`Erreur lors de la suppression de la clé "${key}":`, error);
+    throw error;
+  }
+}
+
+/**
+ * Vérifier si une clé existe dans Redis.
+ * @param {string} key - La clé à vérifier.
+ * @returns {Promise<boolean>} - Indique si la clé existe.
+ */
+async function keyExists(key) {
+  try {
+    await redisConnection.connectRedis(); // Assurer la connexion à Redis
+    const redisClient = redisConnection.getRedisClient(); // Obtenir le client Redis
+    const exists = await redisClient.exists(key);
+    return exists === 1;
+  } catch (error) {
+    console.error(`Erreur lors de la vérification de la clé "${key}":`, error);
+    throw error;
+  }
+}
+
+/**
+ * Effacer tout le cache Redis (utilisation prudente).
+ * @returns {Promise<void>}
+ */
+async function clearCache() {
+  try {
+    await redisConnection.connectRedis(); // Assurer la connexion à Redis
+    const redisClient = redisConnection.getRedisClient(); // Obtenir le client Redis
+    await redisClient.flushAll();
+  } catch (error) {
+    console.error('Erreur lors de la suppression de tout le cache Redis:', error);
+    throw error;
+  }
+}
+
+// Export des services Redis
 module.exports = {
   cacheData,
-  getCacheData,
+  getCachedData,
+  deleteCache,
+  keyExists,
+  clearCache,
 };

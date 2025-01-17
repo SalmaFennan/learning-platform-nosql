@@ -1,13 +1,13 @@
-// Question: Comment organiser le point d'entrée de l'application ?
-// Question: Quelle est la meilleure façon de gérer le démarrage de l'application ?
-
 const express = require('express');
 const config = require('./config/env');
-const db = require('./config/db');
-
-const courseRoutes = require('./routes/courseRoutes');
+const db = require('./config/db'); // Assurez-vous que ce fichier exporte les fonctions connectMongo et connectRedis
 
 const app = express();
+const courseRoutes = require('./routes/courseRoutes');
+const studentRoutes = require('./routes/studentRoutes');
+const enrollmentRoutes = require('./routes/enrollmentRoutes');
+
+
 
 // Vérifier que la variable d'environnement MONGODB_URI est bien définie
 if (!process.env.MONGODB_URI) {
@@ -15,6 +15,18 @@ if (!process.env.MONGODB_URI) {
   process.exit(1); // Arrêter l'application si la variable est manquante
 }
 
+// Fonction pour configurer Express
+function configureExpress() {
+  app.use(express.json()); // Middleware pour parser les requêtes JSON
+  app.use(express.urlencoded({ extended: true })); // Middleware pour parser les données URL-encodées
+
+  // Monter les routes
+  app.use('/courses', courseRoutes);
+  app.use('/students', studentRoutes);
+  app.use('/enrollment', enrollmentRoutes);
+}
+
+// Fonction pour connecter aux bases de données
 async function connectDatabases() {
   try {
     // Connexion à MongoDB
@@ -25,15 +37,6 @@ async function connectDatabases() {
     console.error('Failed to connect to databases:', error);
     throw error; // Relancer l'erreur pour qu'elle soit capturée dans le démarrage
   }
-}
-
-// Fonction pour configurer Express
-function configureExpress() {
-  app.use(express.json()); // Middleware pour parser les requêtes JSON
-  app.use(express.urlencoded({ extended: true })); // Middleware pour parser les données URL-encodées
-
-  // Monter les routes
-  app.use('/courses', courseRoutes);
 }
 
 // Ajouter un gestionnaire d'erreurs global pour Express
@@ -66,7 +69,7 @@ process.on('SIGTERM', async () => {
   try {
     console.log('Shutting down gracefully...');
     // Fermer les connexions aux bases de données et autres ressources
-    await db.disconnect();
+    await db.disconnect(); // Assurez-vous d'avoir une fonction de déconnexion dans db.js
     console.log('Server shutdown complete.');
     process.exit(0); // Quitter avec un code de succès
   } catch (error) {
@@ -75,4 +78,5 @@ process.on('SIGTERM', async () => {
   }
 });
 
+// Démarrer le serveur
 startServer();
