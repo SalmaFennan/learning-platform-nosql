@@ -199,15 +199,15 @@ Démarrez le serveur Express en exécutant la commande 'npm start'. Le serveur c
 
 1. **Gestion des Cours** : Offre la possibilité de créer et d'administrer les cours destinés aux étudiants.
 
-![Capture pour le demarrage de l'application ](imgages/cours.png)
+![Capture pour l'affichage des cours dans la base de données ](imgages/cours.png)
 
-![Capture pour le demarrage de l'application ](imgages/createCours.png)
+![Capture pour la création d'un nouveau cours ](imgages/createCours.png)
 
-![Capture pour le demarrage de l'application ](imgages/cours2.png)
+![Capture pour la consultation de la base de donnée après ajout d'un cours  ](imgages/cours2.png)
 
-![Capture pour le demarrage de l'application ](imgages/afficherCours.png)
+![Capture pour la consultation des cours  ](imgages/afficherCours.png)
 
-![Capture pour le demarrage de l'application ](imgages/deleteCours.png)
+![Capture pour la suppression d'un cours ](imgages/deleteCours.png)
 
 2. **Gestion des Étudiants** : Ajouter, consulter et administrer les informations des étudiants.
 
