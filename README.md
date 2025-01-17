@@ -19,7 +19,7 @@ L'accent est mis sur une organisation professionnelle du code, l'utilisation de 
 4. Lancez le serveur avec npm start.
 
 # Mon Installation de MongoDB 
-![Mon installation de mongodb]("images\mongodb.png")
+![Mon installation de mongodb]("/images/mongodb.png")
 
 # Installation de Redis
 Pour installer Redis, vous pouvez suivre les étapes decrit en bas ou suivre le lien suivant en fonction de votre système d'exploitation :[lien d'installation redis](https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/install-redis-on-windows/)
