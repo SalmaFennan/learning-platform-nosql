@@ -19,7 +19,7 @@ L'accent est mis sur une organisation professionnelle du code, l'utilisation de 
 4. Lancez le serveur avec npm start.
 
 # Mon Installation de MongoDB 
-![Mon installation de mongodb]("C:\Users\lenovoi\Documents\plateforme_apprentissage_nosql\learning-platform-template\images\mongodb.png")
+![Mon installation de mongodb]("images\mongodb.png")
 
 # Installation de Redis
 Pour installer Redis, vous pouvez suivre les étapes decrit en bas ou suivre le lien suivant en fonction de votre système d'exploitation :[lien d'installation redis](https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/install-redis-on-windows/)
@@ -143,7 +143,7 @@ Cela assure que l'application ne démarre que lorsque toutes les connexions et c
 
 # Capture d'ecran montrant que la connection à la base de données mongdb et redis
 
-![Capture pour le test de connectivité au base de données et Redis ](imgages/connexionBdRedis.png)
+![Capture pour le test de connectivité au base de données et Redis ](images/connexionBdRedis.png)
 
 # Fichier : `courseController.js`
 
@@ -191,7 +191,7 @@ L'application utilise une base de données MongoDB appelée mydatabase. Assurez-
 3. Lancer le Serveur :
 Démarrez le serveur Express en exécutant la commande 'npm start'. Le serveur commencera à écouter sur le port configuré. Vous verrez un message dans le terminal confirmant son bon fonctionnement.
 
-![Capture pour le demarrage de l'application ](imgages/demarageApp.png)
+![Capture pour le demarrage de l'application ](images/demarageApp.png)
 
 # Exécution d'API avec Node.js
 
@@ -199,47 +199,47 @@ Démarrez le serveur Express en exécutant la commande 'npm start'. Le serveur c
 
 1. **Gestion des Cours** : Offre la possibilité de créer et d'administrer les cours destinés aux étudiants.
 
-![Capture pour l'affichage des cours dans la base de données ](imgages/cours.png)
+![Capture pour l'affichage des cours dans la base de données ](images/cours.png)
 
-![Capture pour la création d'un nouveau cours ](imgages/createCours.png)
+![Capture pour la création d'un nouveau cours ](images/createCours.png)
 
-![Capture pour la consultation de la base de donnée après ajout d'un cours  ](imgages/cours2.png)
+![Capture pour la consultation de la base de donnée après ajout d'un cours  ](images/cours2.png)
 
-![Capture pour la consultation des cours  ](imgages/afficherCours.png)
+![Capture pour la consultation des cours  ](images/afficherCours.png)
 
-![Capture pour la suppression d'un cours ](imgages/deleteCours.png)
+![Capture pour la suppression d'un cours ](images/deleteCours.png)
 
 2. **Gestion des Étudiants** : Ajouter, consulter et administrer les informations des étudiants.
 
-![Capture pour l'affichage des etudiants insérés dans la base de données ](imgages/bddstudents.png)
+![Capture pour l'affichage des etudiants insérés dans la base de données ](images/bddstudents.png)
 
-![Capture pour ajouter nouveau étudiant ](imgages/ajouterEtudiant.png)
+![Capture pour ajouter nouveau étudiant ](images/ajouterEtudiant.png)
 
-![Capture pour afficher tous les etudiants ](imgages/afficherTsLesEtudiants.png)
+![Capture pour afficher tous les etudiants ](images/afficherTsLesEtudiants.png)
 
-![Capture pour récuperer un étudiant par son id ](imgages/getEtudiantById.png)
+![Capture pour récuperer un étudiant par son id ](images/getEtudiantById.png)
 
-![Capture pour supprimer un etudiant  ](imgages/supprimerEtudiant.png)
+![Capture pour supprimer un etudiant  ](images/supprimerEtudiant.png)
 
-![Capture pour donner les statistique sur les etudiants existant dans la base de donnée ](imgages/statistiqueEtudiant.png)
+![Capture pour donner les statistique sur les etudiants existant dans la base de donnée ](images/statistiqueEtudiant.png)
 
-![Capture pour mettre à jour les information d'un étudiant ](imgages/updateEtudiant.png)
+![Capture pour mettre à jour les information d'un étudiant ](images/updateEtudiant.png)
 
 3. **Gestion des Inscriptions** : Facilite l'enregistrement des étudiants aux différents cours.
 
-![Capture pour l'affichage des inscription dans la base de donnée ](imgages/enrollment.png)
+![Capture pour l'affichage des inscription dans la base de donnée ](images/enrollment.png)
 
-![Capture pour l'ajout d'une inscription ](imgages/createEnrollment.png)
+![Capture pour l'ajout d'une inscription ](images/createEnrollment.png)
 
-![Capture pour la récuperation d'une inscription avec l'id ](imgages/getEnrollmentById.png)
+![Capture pour la récuperation d'une inscription avec l'id ](images/getEnrollmentById.png)
 
-![Capture pour la consultation des inscription ](imgages/getAllEnrollment.png)
+![Capture pour la consultation des inscription ](images/getAllEnrollment.png)
 
-![Capture pour avoir les statistique sur les inscriptions ](imgages/enrollmentStatut.png)
+![Capture pour avoir les statistique sur les inscriptions ](images/enrollmentStatut.png)
 
-![Capture pour supprimer une inscription ](imgages/deleteEnrollment.png)
+![Capture pour supprimer une inscription ](images/deleteEnrollment.png)
 
-![Capture affiche l'inscription supprimé de la base de donnée ](imgages/enrollmentdeleted.png)
+![Capture affiche l'inscription supprimé de la base de donnée ](images/enrollmentdeleted.png)
 
 
 # Usage des Vues
