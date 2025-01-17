@@ -19,7 +19,7 @@ L'accent est mis sur une organisation professionnelle du code, l'utilisation de 
 4. Lancez le serveur avec npm start.
 
 # Mon Installation de MongoDB 
-![Capture d'écran testEnroll](/img/mongodb.png)
+![Mon installation de mongodb]("C:\Users\lenovoi\Documents\plateforme_apprentissage_nosql\learning-platform-template\images\mongodb.png")
 
 # Installation de Redis
 Pour installer Redis, vous pouvez suivre les étapes decrit en bas ou suivre le lien suivant en fonction de votre système d'exploitation :[lien d'installation redis](https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/install-redis-on-windows/)
@@ -38,7 +38,7 @@ Si vous utilisez Homebrew, vous pouvez installer Redis avec la commande suivante
 brew install redis
 ```
 # Mon installation de redis :
-![Capture d'écran installation de redis](/img/redis.png)
+![Capture d'écran installation de redis](/images/redis.png)
 
 **Configurer les variables d'environnement** :
    Dans le fichier `.env`, assurez-vous de configurer les informations de connexion à MongoDB et Redis :
